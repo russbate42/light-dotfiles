@@ -1,6 +1,8 @@
 # Custom component
 #=============================================================================#
-source ~/.aliases.sh
+if [[ -f ~/aliases.sh ]]; then
+    . ~/aliases.sh
+fi
 
 # Vim mode hopefully 
 set -o vi
@@ -28,6 +30,19 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.local/bin/bin:$PATH
 # For Rust
 export PATH=$HOME/.cargo/bin:$PATH
+# For Go
+export PATH=$HOME/go/bin:$PATH
+
+# Color terminal
+if [[ -x /usr/bin/dircolors ]]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
 #=============================================================================#
 
 

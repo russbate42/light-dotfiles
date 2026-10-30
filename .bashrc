@@ -26,9 +26,10 @@ export PATH=$HOME/.local/bin:$PATH
 
 export LD_LIBRARY_PATH=$HOME/.local/lib:$LD_LIBRARY_PATH
 export MANPATH=$HOME/.local/share/man:$MANPATH
-
 # For Rust
 export PATH=$HOME/.cargo/bin:$PATH
+# For Go
+export PATH=$HOME/go/bin:$PATH
 
 #=============================================================================#
 
@@ -107,12 +108,11 @@ xterm*|rxvt*)
 esac
 
 # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
+if [[ -x /usr/bin/dircolors ]]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
