@@ -49,16 +49,29 @@ fi
 # OH MY ZSH
 #=============================================================================#
 # Path to your oh-my-zsh installation.
-# export ZSH="$HOME/.oh-my-zsh"
+if [[ -d "$HOME/.oh-my-zsh" ]]; then
+    export ZSH="$HOME/.oh-my-zsh"
+    ZSH_THEME="robbyrussell"
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+    # Uncomment the following line to use case-sensitive completion.
+    CASE_SENSITIVE="true"
 
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+    zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
+    # Uncomment the following line to enable command auto-correction.
+    # ENABLE_CORRECTION="true"
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# source $ZSH/oh-my-zsh.sh
+    source $ZSH/oh-my-zsh.sh
+     source $ZSH/oh-my-zsh.sh
+else
+    # Fallback prompt without oh-my-zsh: user@host, path, git branch, status
+    autoload -Uz vcs_info add-zsh-hook
+    add-zsh-hook precmd vcs_info          # refresh git info before each prompt
+    zstyle ':vcs_info:*' enable git
+    zstyle ':vcs_info:git:*' formats ' %F{magenta}(%b)%f'
+    zstyle ':vcs_info:git:*' actionformats ' %F{magenta}(%b|%a)%f'
+    setopt prompt_subst                   # expand ${vcs_info_msg_0_} each time
+    PROMPT='%F{green}%n@%m%f %F{blue}%3~%f${vcs_info_msg_0_} %(?.%F{green}.%F{red})%#%f '
+ fi
+fi
 #=============================================================================#
