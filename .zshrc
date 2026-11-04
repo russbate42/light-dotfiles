@@ -80,17 +80,20 @@ fi
 # Path to your oh-my-zsh installation.
 # Function to prepend a Docker indicator if inside a container
 docker_prompt_prefix() {
-    if [[ -f "/.dockerenv" ]] || [[ -n "$DOCKER_CONTAINER" ]]; then
-        if [ -n "$PROMPT" ] || [ -n "$PS1" ]; then
-            # Prints a blue Nerd Font Docker whale icon followed by a space
-            if [[ -n "$DOCKER_CONTAINER" ]]; then
-                print -n -P "%F{blue}[ ${DOCKER_CONTAINER}] %f"
-            else
-                print -n -P "%F{blue}[Docker] %f "
-            fi
-        fi
+    [[ -f /.dockerenv || -n $DOCKER_CONTAINER ]] || return
+    local tag
+    if [[ -n $DOCKER_CONTAINER ]]; then
+        tag="%F{blue}[  ${DOCKER_CONTAINER} ] %f"
+    else
+        tag="%F{blue}[ Docker ] %f"
     fi
+    # Guard: only prepend if not already there (themes that don't rebuild PROMPT)
+    [[ $PROMPT == "$tag"* ]] || PROMPT="$tag$PROMPT"
 }
+ 
+ # Safely hook the function right before the prompt renders
+ autoload -Uz add-zsh-hook
+ add-zsh-hook precmd docker_prompt_prefix
 
 # Safely hook the function right before the prompt renders
 autoload -Uz add-zsh-hook
