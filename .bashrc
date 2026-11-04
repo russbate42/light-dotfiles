@@ -136,3 +136,29 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Function to evaluate and return the Docker prefix
+get_docker_prefix() {
+    # Check if inside a container and if PS1 is set
+    if { [ -f /.dockerenv ] || [ -n "$DOCKER_CONTAINER" ]; } && [ -n "$PS1" ]; then
+        # Returns a blue Nerd Font Docker whale icon (\uF308)
+        # \[ \] wraps non-printing color codes to prevent line-wrap bugs
+        echo -e "\[\e[34m\] \[\e[0m\] "
+    fi
+}
+
+# Function to safely prepends the Docker prefix to your existing PS1
+build_bash_prompt() {
+    # Initialize a backup of your original prompt on the first run
+    if [ -z "$ORIGINAL_PS1" ]; then
+        ORIGINAL_PS1="$PS1"
+    fi
+    
+    # Rebuild PS1 dynamically by prepending the docker function output
+    PS1="$(get_docker_prefix)$ORIGINAL_PS1"
+}
+
+# Execute the builder function right before every prompt render
+if [[ ! "$PROMPT_COMMAND" =~ build_bash_prompt ]]; then
+    PROMPT_COMMAND="build_bash_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+fi

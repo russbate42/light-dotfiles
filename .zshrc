@@ -74,3 +74,33 @@ else
     PROMPT='%F{green}%n@%m%f %F{blue}%3~%f${vcs_info_msg_0_} %(?.%F{green}.%F{red})%#%f '
 fi
 #=============================================================================#
+
+# OH MY ZSH
+#=============================================================================#
+# Path to your oh-my-zsh installation.
+# Function to prepend a Docker indicator if inside a container
+docker_prompt_prefix() {
+    if [[ -f "/.dockerenv" ]] || [[ -n "$DOCKER_CONTAINER" ]]; then
+        if [ -n "$PROMPT" ] || [ -n "$PS1" ]; then
+            # Prints a blue Nerd Font Docker whale icon followed by a space
+            if [[ -n "$DOCKER_CONTAINER" ]]; then
+                print -n -P "%F{blue}[ ${DOCKER_CONTAINER}] %f"
+            else
+                print -n -P "%F{blue}[Docker] %f "
+            fi
+        fi
+    fi
+}
+
+# Safely hook the function right before the prompt renders
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd docker_prompt_prefix
+
+# THis is the faster alternative if the above is adding latency
+# if { [[ -f /.dockerenv ]] || [[ -n "$DOCKER_CONTAINER" ]]; }\
+#     && [[ -z "$DOCKER_PROMPT_SET" ]]; then
+#     PROMPT="%F{blue} %f ${PROMPT}"
+#     # Export the guard variable so all nested shells know it's already set
+#     export DOCKER_PROMPT_SET=1
+# fi
+#=============================================================================#
